@@ -1,4 +1,4 @@
-# include <iostream>
+/*# include <iostream>
 #include<string>
 #include<memory>
 #include<vector>
@@ -7,24 +7,26 @@
 
 int main(int argsi, char** args)
 {
+
+
     try{
-        for(int i = 0; i < argsi; i ++){
+        for (int i = 0; i < argsi; i ++){
             std::cout << args[i]<<'\n';
         }
         const int blocksize = 128000;
 
-        if(argsi != 5){
+        if (argsi != 5){
             throw std::runtime_error("argumetns mistake");
         }
         std::vector<std::pair<uint8_t, int> > inftree;
-        if((char) args[3][0] == 'e'){
+        if ((char) args[3][0] == 'e'){
             std::ifstream inFile;
             inFile.open(args[1]);
             std::ofstream outFile;
             outFile.open(args[2]);
             HufType huft;
 
-            if(!inFile || !outFile){
+            if (!inFile || !outFile){
                 throw std::runtime_error("wrong direction");
             }
 
@@ -38,7 +40,7 @@ int main(int argsi, char** args)
             inftree = huft.info();
             uint32_t treeSize = (uint32_t)inftree.size();
             outFile.write((char *) &(treeSize), sizeof(int32_t));
-            for(size_t i = 0; i < inftree.size(); i ++)
+            for (size_t i = 0; i < inftree.size(); i ++)
             {
 
                 outFile.write((char *) &(inftree[i].first), 1);
@@ -49,10 +51,10 @@ int main(int argsi, char** args)
             Huffman ans(huft);
             int  k = 0;
 
-            while(!inFile.eof()){
+            while (!inFile.eof()){
 
                 inFile.read((char*) (data.get()), blocksize);
-                std::pair<std::vector<uint8_t>, int> enc = ans.encode(data.get(), (int) inFile.gcount());
+                std::pair<std::vector<uint8_t>, int> enc = ans.encod(data.get(), (int) inFile.gcount());
                 uint32_t siz = enc.second;
                 outFile.write((char *) &(siz), sizeof(int32_t));
                 outFile.write((char *) enc.first.data(), enc.first.size());
@@ -123,5 +125,5 @@ int main(int argsi, char** args)
     }
     return 0;
 
-}
+}*/
 

@@ -15,7 +15,6 @@ void HufType::add(const uint8_t* a, size_t si){
 
 HufType::HufType(std::vector<std::pair<uint8_t, int>> const& tree){
 
-
     for(size_t i = 0; i < tree.size(); i ++){
         if(cnt[tree[i].first] != 0 || tree[i].second == 0)
             throw std::runtime_error("asdasd");
@@ -64,7 +63,7 @@ Huffman::Huffman(HufType rhs)
     symbolsize--;
 }
 
-std::pair<std::vector<uint8_t>, int> Huffman::encode(const uint8_t* a, size_t si){
+std::pair<std::vector<uint8_t>, int> Huffman::encod(const uint8_t* a, size_t si){
     std::vector<uint8_t> res;
     uint8_t val = 0;
     int cnt = 0;
@@ -111,7 +110,6 @@ std::vector<uint8_t> Huffman::decod(const uint8_t* a, size_t si, int needbit){
                }
                t /= 2;
                li--;
-
            }
        }
        for(int i = si - 2; i >= 0; i --){
@@ -134,3 +132,4 @@ std::vector<uint8_t> Huffman::decod(const uint8_t* a, size_t si, int needbit){
        reverse(ans.begin(), ans.end());
      return ans;
 }
+

@@ -24,7 +24,7 @@ class Huffman
 
 public:
    Huffman(HufType rhs);
-   std::pair<std::vector<uint8_t>, int> encode(const uint8_t* a, size_t si);
+   std::pair<std::vector<uint8_t>, int> encod(const uint8_t* a, size_t si);
    std::vector<uint8_t> decod(const uint8_t* a, size_t si, int needBit);
 
    size_t leftson[len * 2], rightson[len * 2], parent[len * 2];
