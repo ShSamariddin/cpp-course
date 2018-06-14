@@ -4,8 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    huffman.cpp
+    huffman.cpp \
+    pro.cpp
 
 HEADERS += \
-    huffman.h
+    huffman.h \
+    pro.h
 
