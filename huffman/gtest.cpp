@@ -109,7 +109,7 @@ TEST(correctness ,test4){
     int t = rand() % 100000;
     while(t != 0){
         t--;
-        uint8_t siz = rand() % 256;
+        uint32_t siz = rand() % 256;
         text.write((char *) &(siz), sizeof(int32_t));
     }
     text.close();
