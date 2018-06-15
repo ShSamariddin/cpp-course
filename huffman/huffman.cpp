@@ -35,9 +35,13 @@ std::vector<std::pair<uint8_t, int> > HufType::info(){
     }
     return res;
 }
+Huffman::Huffman(){
+
+}
 
 Huffman::Huffman(HufType rhs)
 {
+
     std::priority_queue <std::pair<int, unsigned int> > st;
     for(int i = 0; i < len; i ++){
         if(rhs.cnt[i]){
@@ -46,8 +50,9 @@ Huffman::Huffman(HufType rhs)
             st.push({-rhs.cnt[i], i});
         }
     }
+
     symbolsize = len;
-    while(st.size() != 1){
+    while(st.size() > 1){
         std::pair<int,  int> fir = st.top();
         st.pop();
         std::pair<int,  int> sec = st.top();

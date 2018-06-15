@@ -17,6 +17,7 @@ void huf::encode(std::ifstream& inFile, std::ofstream& outFile)
         if (!inFile || !outFile){
             throw std::runtime_error("wrong direction");
         }
+
         HufType huft;
 
         std::unique_ptr<uint8_t[]> data(new uint8_t[blocksize]);
@@ -25,9 +26,10 @@ void huf::encode(std::ifstream& inFile, std::ofstream& outFile)
             inFile.read((char *) (data.get()), blocksize);
             huft.add(data.get(), inFile.gcount());
         }
-
         inftree = huft.info();
         uint32_t treeSize = (uint32_t)inftree.size();
+        //treeSize = 1;
+        //return ;
         outFile.write((char *) &(treeSize), sizeof(int32_t));
         for (size_t i = 0; i < inftree.size(); i ++)
         {
@@ -41,7 +43,6 @@ void huf::encode(std::ifstream& inFile, std::ofstream& outFile)
         int  k = 0;
 
         while (!inFile.eof()){
-
             inFile.read((char*) (data.get()), blocksize);
             std::pair<std::vector<uint8_t>, int> enc = ans.encod(data.get(), (int) inFile.gcount());
             uint32_t siz = enc.second;
@@ -62,6 +63,9 @@ void huf::decode(std::ifstream& inFile, std::ofstream& outFile)
             throw std::runtime_error("wrong direction");
         }
         uint32_t treeSize = 0;
+        if(inFile.eof()){
+            return ;
+        }
         inFile.read((char *) &(treeSize), sizeof(int32_t));
         if(!inFile &&  treeSize > len){
             throw std::runtime_error("wrong information in line 73");
