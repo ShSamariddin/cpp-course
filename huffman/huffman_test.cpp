@@ -2,9 +2,33 @@
 #include <cassert>
 #include <cstdlib>
 #include <vector>
-#include <utility>
+#include <bits/stdc++.h>
 #include<fstream>
 #include "huf.h"
+
+bool cheker(std::ifstream& ans1, std::ifstream& ans2){
+    const int blocksize = 10;
+    std::unique_ptr<uint8_t[]> data1(new uint8_t[blocksize]);
+    std::unique_ptr<uint8_t[]> data2(new uint8_t[blocksize]);
+    while (!ans1.eof() && !ans2.eof()){
+
+        ans1.read((char*) (data1.get()), blocksize);
+        ans2.read((char*) (data2.get()), blocksize);
+        if(ans1.gcount() != ans2.gcount()){
+            return 0;
+        }
+        std::string t1 = (char*)data1.get();
+        std::string t2 = (char*) data2.get();
+        if(t1 != t2){
+            return 0;
+        }
+    }
+    if(!ans1.eof() || !ans2.eof()){
+        return 0;
+    }
+    return 1;
+}
+
 int main(){
 
 
@@ -23,6 +47,16 @@ int main(){
     test.decode(inFile2, outFile2);
     inFile2.close();
     outFile2.close();
+    std::ifstream ans1;
+    std::ifstream ans2;
+    ans1.open("/home/samariddin/Desktop/test/testenc2");
+    ans2.open("/home/samariddin/Desktop/test/testsec2");
+    if(cheker(ans1, ans2)){
+        std::cout <<"YES\n";
+    } else{
+        std::cout <<"NO\n";
+    }
+
 
 }
 
