@@ -50,8 +50,14 @@ Huffman::Huffman(HufType rhs)
             st.push({-rhs.cnt[i], i});
         }
     }
-
     symbolsize = len;
+    if(st.size() == 1){
+        std::pair<int,  int> fir = st.top();
+        isrightson[fir.second] = true;
+        parent[fir.second] = symbolsize;
+        rightson[symbolsize] = fir.second;
+        symbolsize++;
+    }
     while(st.size() > 1){
         std::pair<int,  int> fir = st.top();
         st.pop();
@@ -96,6 +102,7 @@ std::pair<std::vector<uint8_t>, int> Huffman::encod(const uint8_t* a, size_t si)
 
 
 std::vector<uint8_t> Huffman::decod(const uint8_t* a, size_t si, int needbit){
+
        std::vector<uint8_t> ans;
        int pos = symbolsize;
 

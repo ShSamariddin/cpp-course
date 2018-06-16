@@ -26,8 +26,6 @@ namespace huf{
             }
             inftree = huft.info();
             uint32_t treeSize = (uint32_t)inftree.size();
-            //treeSize = 1;
-            //return ;
             outFile.write((char *) &(treeSize), sizeof(int32_t));
             for (size_t i = 0; i < inftree.size(); i ++)
             {
@@ -38,10 +36,10 @@ namespace huf{
             inFile.clear();
             inFile.seekg(0);
             Huffman ans(huft);
-            int  k = 0;
-
             while (!inFile.eof()){
+                int el;
                 inFile.read((char*) (data.get()), blocksize);
+
                 std::pair<std::vector<uint8_t>, int> enc = ans.encod(data.get(), (int) inFile.gcount());
                 uint32_t siz = enc.second;
                 outFile.write((char *) &(siz), sizeof(int32_t));
