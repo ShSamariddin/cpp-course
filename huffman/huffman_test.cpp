@@ -32,72 +32,72 @@ bool cheker(std::ifstream& ans1, std::ifstream& ans2){
 int main(){
 
 
-    huf test;
-    std::ifstream inFile1;
-    std::ofstream outFile1;
-    inFile1.open("../test/testenc1");
-    outFile1.open("../test/testdec1");
-    test.encode(inFile1, outFile1);
-    inFile1.close();
-    outFile1.close();
-    std::ifstream inFile2;
-    std::ofstream outFile2;
-    inFile2.open("../test/testdec1");
-    outFile2.open("../test/testsec1");
-    test.decode(inFile2, outFile2);
-    inFile2.close();
-    outFile2.close();
-    std::ifstream ans1;
-    std::ifstream ans2;
-    ans1.open("../test/testenc1");
-    ans2.open("../test/testsec1");
-    if(cheker(ans1, ans2)){
-        std::cout <<"YES\n";
-    } else{
-        std::cout <<"NO\n";
-    }
-    ans1.close();
-    ans2.close();
+    // huf test;
+    // std::ifstream inFile1;
+    // std::ofstream outFile1;
+    // inFile1.open("./test/testenc1");
+    // outFile1.open("./test/testdec1");
+    // test.encode(inFile1, outFile1);
+    // inFile1.close();
+    // outFile1.close();
+    // std::ifstream inFile2;
+    // std::ofstream outFile2;
+    // inFile2.open("../test/testdec1");
+    // outFile2.open("../test/testsec1");
+    // test.decode(inFile2, outFile2);
+    // inFile2.close();
+    // outFile2.close();
+    // std::ifstream ans1;
+    // std::ifstream ans2;
+    // ans1.open("../test/testenc1");
+    // ans2.open("../test/testsec1");
+    // if(cheker(ans1, ans2)){
+    //     std::cout <<"YES\n";
+    // } else{
+    //     std::cout <<"NO\n";
+    // }
+    // ans1.close();
+    // ans2.close();
 
-    huf text;
-    inFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
-    outFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
-    text.encode(inFile1, outFile1);
-    inFile1.close();
-    outFile1.close();
-    inFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
-    outFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
-    text.decode(inFile2, outFile2);
-    inFile2.close();
-    outFile2.close();
-    ans1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
-    ans2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
-    if(cheker(ans1, ans2)){
-        std::cout <<"YES\n";
-    } else{
-        std::cout <<"NO\n";
-    }
-    ans1.close();
-    ans2.close();
-    huf text2;
-    inFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
-    outFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
-    text2.encode(inFile1, outFile1);
-    inFile1.close();
-    outFile1.close();
-    inFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
-    outFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
-    text.decode(inFile2, outFile2);
-    inFile2.close();
-    outFile2.close();
-    ans1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
-    ans2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
-    if(cheker(ans1, ans2)){
-        std::cout <<"YES\n";
-    } else{
-        std::cout <<"NO\n";
-    }
-    ans1.close();
-    ans2.close();
+    // huf text;
+    // inFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
+    // outFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
+    // text.encode(inFile1, outFile1);
+    // inFile1.close();
+    // outFile1.close();
+    // inFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
+    // outFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
+    // text.decode(inFile2, outFile2);
+    // inFile2.close();
+    // outFile2.close();
+    // ans1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
+    // ans2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
+    // if(cheker(ans1, ans2)){
+    //     std::cout <<"YES\n";
+    // } else{
+    //     std::cout <<"NO\n";
+    // }
+    // ans1.close();
+    // ans2.close();
+    // huf text2;
+    // inFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
+    // outFile1.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
+    // text2.encode(inFile1, outFile1);
+    // inFile1.close();
+    // outFile1.close();
+    // inFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testdec2");
+    // outFile2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
+    // text.decode(inFile2, outFile2);
+    // inFile2.close();
+    // outFile2.close();
+    // ans1.open("/home/samariddin/Documents/cpp-course/huffman/test/testenc2");
+    // ans2.open("/home/samariddin/Documents/cpp-course/huffman/test/testsec2");
+    // if(cheker(ans1, ans2)){
+    //     std::cout <<"YES\n";
+    // } else{
+    //     std::cout <<"NO\n";
+    // }
+    // ans1.close();
+    // ans2.close();
 }
 

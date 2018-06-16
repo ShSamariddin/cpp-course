@@ -30,19 +30,18 @@ bool cheker(std::ifstream& ans1, std::ifstream& ans2){
 }
 
 TEST(correctness, test2) {
-    huf test;
     std::ifstream inFile1;
     std::ofstream outFile1;
     inFile1.open("./test/testenc1");
     outFile1.open("./test/testdec1");
-    test.encode(inFile1, outFile1);
+    huf::encode(inFile1, outFile1);
     inFile1.close();
     outFile1.close();
     std::ifstream inFile2;
     std::ofstream outFile2;
     inFile2.open("./test/testdec1");
     outFile2.open("./test/testsec1");
-    test.decode(inFile2, outFile2);
+    huf::decode(inFile2, outFile2);
     inFile2.close();
     outFile2.close();
     std::ifstream ans1;
@@ -55,19 +54,18 @@ TEST(correctness, test2) {
 
 }
 TEST(correctness, test1){
-	huf test;
     std::ifstream inFile1;
     std::ofstream outFile1;
     inFile1.open("./test/testenc1");
     outFile1.open("./test/testdec1");
-    test.encode(inFile1, outFile1);
+    huf::encode(inFile1, outFile1);
     inFile1.close();
     outFile1.close();
     std::ifstream inFile2;
     std::ofstream outFile2;
     inFile2.open("./test/testdec1");
     outFile2.open("./test/testsec1");
-    test.decode(inFile2, outFile2);
+    huf::decode(inFile2, outFile2);
     inFile2.close();
     outFile2.close();
     std::ifstream ans1;
@@ -79,19 +77,18 @@ TEST(correctness, test1){
     ans2.close();
 }
 TEST(correctness, test3){
-    huf test;
     std::ifstream inFile1;
     std::ofstream outFile1;
     inFile1.open("./test/testenc3");
     outFile1.open("./test/testdec3");
-    test.encode(inFile1, outFile1);
+    huf::encode(inFile1, outFile1);
     inFile1.close();
     outFile1.close();
     std::ifstream inFile2;
     std::ofstream outFile2;
     inFile2.open("./test/testdec3");
     outFile2.open("./test/testsec3");
-    test.decode(inFile2, outFile2);
+    huf::decode(inFile2, outFile2);
     inFile2.close();
     outFile2.close();
     std::ifstream ans1;
@@ -113,19 +110,18 @@ TEST(correctness ,test4){
         text.write((char *) &(siz), sizeof(int32_t));
     }
     text.close();
-    huf test;
     std::ifstream inFile1;
     std::ofstream outFile1;
     inFile1.open("./test/testenc4");
     outFile1.open("./test/testdec4");
-    test.encode(inFile1, outFile1);
+    huf::encode(inFile1, outFile1);
     inFile1.close();
     outFile1.close();
     std::ifstream inFile2;
     std::ofstream outFile2;
     inFile2.open("./test/testdec4");
     outFile2.open("./test/testsec4");
-    test.decode(inFile2, outFile2);
+    huf::decode(inFile2, outFile2);
     inFile2.close();
     outFile2.close();
     std::ifstream ans1;
@@ -135,4 +131,19 @@ TEST(correctness ,test4){
     EXPECT_TRUE(cheker(ans1, ans2));
     ans1.close();
     ans2.close();
+}
+
+TEST(correctness ,test5){
+    std::stringstream in1;
+    std::stringstream out;
+    std::stringstream in2;
+    int t = rand() % 100000;
+    while(t != 0){
+        t--;
+        uint32_t siz = rand() % 256;
+        in1.write((char *) &(siz), sizeof(int32_t));
+    }
+    huf::encode(in1, out);
+    huf::decode(out, in2);
+    EXPECT_TRUE(in1.str()== in2.str());
 }

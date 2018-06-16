@@ -5,107 +5,105 @@
 #include<vector>
 # include<fstream>
 # include "huffman.h"
+namespace huf{
+    const int blocksize = 128000;
+    void encode(std::istream& inFile, std::ostream& outFile)
+    {
+        try{
+            std::vector<std::pair<uint8_t, int> > inftree;
+            if (!inFile || !outFile){
+                throw std::runtime_error("wrong direction");
+            }
 
-huf::huf(){}
+            HufType huft;
 
+            std::unique_ptr<uint8_t[]> data(new uint8_t[blocksize]);
+            while (!inFile.eof())
+            {
+                inFile.read((char *) (data.get()), blocksize);
+                huft.add(data.get(), inFile.gcount());
+            }
+            inftree = huft.info();
+            uint32_t treeSize = (uint32_t)inftree.size();
+            //treeSize = 1;
+            //return ;
+            outFile.write((char *) &(treeSize), sizeof(int32_t));
+            for (size_t i = 0; i < inftree.size(); i ++)
+            {
 
+                outFile.write((char *) &(inftree[i].first), 1);
+                outFile.write((char *) &(inftree[i].second), sizeof(int32_t));
+            }
+            inFile.clear();
+            inFile.seekg(0);
+            Huffman ans(huft);
+            int  k = 0;
 
-void huf::encode(std::ifstream& inFile, std::ofstream& outFile)
-{
-    try{
-        std::vector<std::pair<uint8_t, int> > inftree;
-        if (!inFile || !outFile){
-            throw std::runtime_error("wrong direction");
+            while (!inFile.eof()){
+                inFile.read((char*) (data.get()), blocksize);
+                std::pair<std::vector<uint8_t>, int> enc = ans.encod(data.get(), (int) inFile.gcount());
+                uint32_t siz = enc.second;
+                outFile.write((char *) &(siz), sizeof(int32_t));
+                outFile.write((char *) enc.first.data(), enc.first.size());
+            }
+
+        } catch(std::runtime_error const& e){
+            std::cout << e.what()<<'\n';
         }
-
-        HufType huft;
-
-        std::unique_ptr<uint8_t[]> data(new uint8_t[blocksize]);
-        while (!inFile.eof())
-        {
-            inFile.read((char *) (data.get()), blocksize);
-            huft.add(data.get(), inFile.gcount());
-        }
-        inftree = huft.info();
-        uint32_t treeSize = (uint32_t)inftree.size();
-        //treeSize = 1;
-        //return ;
-        outFile.write((char *) &(treeSize), sizeof(int32_t));
-        for (size_t i = 0; i < inftree.size(); i ++)
-        {
-
-            outFile.write((char *) &(inftree[i].first), 1);
-            outFile.write((char *) &(inftree[i].second), sizeof(int32_t));
-        }
-        inFile.clear();
-        inFile.seekg(0);
-        Huffman ans(huft);
-        int  k = 0;
-
-        while (!inFile.eof()){
-            inFile.read((char*) (data.get()), blocksize);
-            std::pair<std::vector<uint8_t>, int> enc = ans.encod(data.get(), (int) inFile.gcount());
-            uint32_t siz = enc.second;
-            outFile.write((char *) &(siz), sizeof(int32_t));
-            outFile.write((char *) enc.first.data(), enc.first.size());
-        }
-
-    } catch(std::runtime_error const& e){
-        std::cout << e.what()<<'\n';
     }
-}
 
-void huf::decode(std::ifstream& inFile, std::ofstream& outFile)
-{
-    try{
-        std::vector<std::pair<uint8_t, int> > inftree;
-        if(!inFile || !outFile){
-            throw std::runtime_error("wrong direction");
-        }
-        uint32_t treeSize = 0;
-        if(inFile.eof()){
-            return ;
-        }
-        inFile.read((char *) &(treeSize), sizeof(int32_t));
-        if(!inFile &&  treeSize > len){
-            throw std::runtime_error("wrong information in line 73");
-        }
-        for(int i = 0; i < treeSize; i ++){
-            inftree.push_back({0, 0});
-            inFile.read((char *) &(inftree[i].first), 1);
-            if(!inFile){
-                throw std::runtime_error("wronng information in line 80");
+    void decode(std::istream& inFile, std::ostream& outFile)
+    {
+        try{
+            std::vector<std::pair<uint8_t, int> > inftree;
+            if(!inFile || !outFile){
+                throw std::runtime_error("wrong direction");
             }
-            inFile.read((char *) &(inftree[i].second), sizeof(int32_t));
-            if(!inFile){
-                throw std::runtime_error("wrong information int line 84");
+            uint32_t treeSize = 0;
+            if(inFile.eof()){
+                return ;
             }
-        }
-        HufType newTree(inftree);
-        Huffman dec(newTree);
-        int k = 0;
-        std::unique_ptr<uint8_t[]> vec(new uint8_t[blocksize]);
-        while(!inFile.eof()){
-            uint32_t siz = 0;
-            inFile.read((char *) &(siz), sizeof(int32_t));
-            if(siz == 0){
-                continue;
+            inFile.read((char *) &(treeSize), sizeof(int32_t));
+            if(!inFile &&  treeSize > len){
+                throw std::runtime_error("wrong information in line 73");
             }
-            int vecSize = siz;
-            int needsize = 0;
-            if(vecSize % 8 != 0){
-                needsize = 8 - vecSize % 8;
+            for(int i = 0; i < treeSize; i ++){
+                inftree.push_back({0, 0});
+                inFile.read((char *) &(inftree[i].first), 1);
+                if(!inFile){
+                    throw std::runtime_error("wronng information in line 80");
+                }
+                inFile.read((char *) &(inftree[i].second), sizeof(int32_t));
+                if(!inFile){
+                    throw std::runtime_error("wrong information int line 84");
+                }
             }
-            vecSize += needsize;
-            vecSize /= 8;
-            inFile.read((char *) (vec.get()), vecSize);
-            std::vector<uint8_t> res = dec.decod(vec.get(), vecSize, needsize);
-            outFile.write((char *) res.data(), res.size());
-        }
+            HufType newTree(inftree);
+            Huffman dec(newTree);
+            int k = 0;
+            std::unique_ptr<uint8_t[]> vec(new uint8_t[blocksize]);
+            while(!inFile.eof()){
+                uint32_t siz = 0;
+                inFile.read((char *) &(siz), sizeof(int32_t));
+                if(siz == 0){
+                    continue;
+                }
+                int vecSize = siz;
+                int needsize = 0;
+                if(vecSize % 8 != 0){
+                    needsize = 8 - vecSize % 8;
+                }
+                vecSize += needsize;
+                vecSize /= 8;
+                inFile.read((char *) (vec.get()), vecSize);
+                std::vector<uint8_t> res = dec.decod(vec.get(), vecSize, needsize);
+                outFile.write((char *) res.data(), res.size());
+            }
 
 
-    } catch(std::runtime_error const& e){
-        std::cout << e.what()<<'\n';
+        } catch(std::runtime_error const& e){
+            std::cout << e.what()<<'\n';
+        }
     }
-}
 
+}

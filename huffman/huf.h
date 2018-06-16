@@ -4,14 +4,9 @@
 # include<vector>
 #include <iostream>
 
-class huf
-{
-public:
-    const int blocksize = 128000;
-    void clear();
-    void encode(std::ifstream& inFile, std::ofstream& outFile);
-    void decode(std::ifstream& inFile, std::ofstream& outFile);
-    huf();
+namespace huf{
+    void encode(std::istream& inFile, std::ostream& outFile);
+    void decode(std::istream& inFile, std::ostream& outFile);
 };
 
 #endif // HUF_H
