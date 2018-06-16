@@ -97,8 +97,8 @@ std::pair<std::vector<uint8_t>, int> Huffman::encod(const uint8_t* a, size_t si)
 
 std::vector<uint8_t> Huffman::decod(const uint8_t* a, size_t si, int needbit){
        std::vector<uint8_t> ans;
-       int si_res;
        int pos = symbolsize;
+
        if(si != 0){
            uint8_t t = a[si - 1];
            t >>= needbit;
@@ -121,15 +121,15 @@ std::vector<uint8_t> Huffman::decod(const uint8_t* a, size_t si, int needbit){
            uint8_t t = a[i];
            int li = 8;
            while(li != 0){
-               if(t % 2 == 1){
+                if(t % 2 == 1){
                    pos = rightson[pos];
-               } else{
+                } else{
                    pos = leftson[pos];
-               }
-               if(pos < 256){
-                   ans.push_back(pos);
-                   pos = symbolsize;
-               }
+                }
+                if(pos < 256){
+                    ans.push_back(pos);
+                    pos = symbolsize;
+                }
                t /= 2;
                li--;
            }
@@ -137,4 +137,3 @@ std::vector<uint8_t> Huffman::decod(const uint8_t* a, size_t si, int needbit){
        reverse(ans.begin(), ans.end());
      return ans;
 }
-

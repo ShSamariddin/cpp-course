@@ -6,6 +6,7 @@
 # include<fstream>
 # include "huffman.h"
 namespace huf{
+    //const int blocksize = 20000;
     const int blocksize = 128000;
     void encode(std::istream& inFile, std::ostream& outFile)
     {
@@ -81,7 +82,7 @@ namespace huf{
             HufType newTree(inftree);
             Huffman dec(newTree);
             int k = 0;
-            std::unique_ptr<uint8_t[]> vec(new uint8_t[blocksize]);
+            std::unique_ptr<uint8_t[]> vec(new uint8_t[blocksize + 10000]);
             while(!inFile.eof()){
                 uint32_t siz = 0;
                 inFile.read((char *) &(siz), sizeof(int32_t));
