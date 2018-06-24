@@ -272,8 +272,11 @@ public:
 
     Array_List(): a(nullptr), ca_len(0), len(0), head(0), tail(0){}
     Array_List(const Array_List& q):Array_List(){
-        for(const_iterator it = q.begin(); it != q.end(); it ++){
-            push_back(*it);
+        if(len != 0){
+            for(const_iterator it = q.begin(); it != q.end(); it ++){
+
+                push_back(T(*it));
+            }
         }
     }
     ~Array_List(){
@@ -282,6 +285,7 @@ public:
         }
         operator delete(a);
     }
+
     Array_List& operator=(Array_List& other){
 //        if (this != &other) {
 //            Array_List copy_list(other);
@@ -378,14 +382,21 @@ public:
 
     }
     iterator begin(){
+        if(ca_len == 0){
+            return iterator(a, 0, 0);
+        }
         return iterator(a, (head - 1 + ca_len) % ca_len, ca_len);
     }
 
     const_iterator begin() const {
+        if(ca_len == 0){
+            return iterator(a, 0, 0);
+        }
         return const_iterator(a, (head - 1 + ca_len)% ca_len, ca_len);
     }
 
     reverse_iterator rbegin(){
+
         return reverse_iterator(end());
     }
 
@@ -394,10 +405,16 @@ public:
     }
 
     iterator end(){
+        if(ca_len == 0){
+            return iterator(a, 0, 0);
+        }
         return iterator(a,(tail - 1 + ca_len) % ca_len, ca_len);
     }
 
     const_iterator end() const {
+        if(ca_len == 0){
+            return iterator(a, 0, 0);
+        }
         return const_iterator(a, (tail - 1 + ca_len) % ca_len, ca_len);
     }
 
@@ -478,6 +495,7 @@ public:
             copy();
         }
         minu(tail);
+        new (&a[tail]) T (value);
         a[tail] = value;
         len++;
     }
@@ -486,7 +504,7 @@ public:
         if(len + 1 >= ca_len - 2){
             copy();
         }
-        a[head] = value;
+        new (&a[head]) T (value);
         plus(head);
         len++;
     }
