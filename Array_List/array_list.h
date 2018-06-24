@@ -347,8 +347,7 @@ public:
             push_back(value);
             x = (head - kol + ca_len) % ca_len;
             int t = tail;
-           // std::cout << x<<' '<<t<<'\n';
-            while(x != t){
+            while(x != (t + 1) & ca_len){
                 std::swap(a[t], a[(t + 1) % ca_len]);
                 t++;
                 t %= ca_len;

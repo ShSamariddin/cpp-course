@@ -6,6 +6,7 @@ using namespace std;
 int main()
 {
 //    Array_List<int> d;
+//    d.insert(d.begin(), 2);
 //    d.push_back(2);
 //    d.push_back(3);
 //    d.push_back(4);
@@ -14,15 +15,10 @@ int main()
 //        cout << *it<<' ';
 //    }
 
-//    Array_List<int> d1;
-//    Array_List<int> d2(d1);
 
-//    d1 = d;
-//    for(auto i:d1){
-//        cout <<i<<'\n';
-//    }
 
-//    Array_List<int>::iterator iii;
+
+
     Array_List<int> d;
     d.begin() == d.end();
     *d.begin();
