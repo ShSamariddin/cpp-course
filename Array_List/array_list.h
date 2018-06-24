@@ -40,7 +40,7 @@ public:
             return *this;
         }
 
-        T operator*(){
+        T& operator*(){
             return ar[pos];
         }
 
@@ -151,7 +151,7 @@ public:
             return *this;
         }
 
-        const T operator*(){
+        const T& operator*(){
             return ar[pos];
         }
 
@@ -165,7 +165,7 @@ public:
 
         const_iterator& operator++ (int){
 
-            iterator it = *this;
+            const_iterator it = *this;
             ++*this;
             return it;
         }
@@ -175,7 +175,7 @@ public:
         }
 
         const_iterator& operator--(int){
-            iterator it = *this;
+            const_iterator it = *this;
             --*this;
             return it;
         }

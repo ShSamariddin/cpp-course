@@ -177,16 +177,45 @@ TEST(correctness, erase_hard) {
 TEST(correctness, insert_easy) {
     Array_List<int> a;
     bool wr = true;
-    for(int i = 0; i < 10; i ++){
+    for(int i = 0; i < 100; i ++){
         a.push_back(i);
     }
 
     Array_List<int>::const_iterator it = a.begin();
-    for(int i = 0; i < 10; i ++){
+    for(int i = 0; i < 100; i ++){
         it = a.begin();
-        it++;
+        it += i * 2;
         a.insert(it, i);
 
+    }
+    for(int i = 0; i < 200; i ++){
+    	if(i / 2 != a.front()){
+    		wr = false;
+    	}
+    	a.pop_front();
+    }
+    EXPECT_TRUE(wr);
+}
+TEST(correctness, insert_hard) {
+    Array_List<int> a;
+    bool wr = true;
+    for(int i = 0; i < 10000; i ++){
+        a.push_back(i);
+    }
+
+    Array_List<int>::iterator it = a.begin();
+    for(int i = 0; i < 10000; i ++){
+        it = a.begin();
+        it += i * 2;
+
+        a.insert(Array_List<int>::const_iterator(it), i);
+
+    }
+    for(int i = 0; i < 20000; i ++){
+    	if(i / 2 != a.front()){
+    		wr = false;
+    	}
+    	a.pop_front();
     }
     EXPECT_TRUE(wr);
 }
