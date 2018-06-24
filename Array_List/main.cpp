@@ -7,7 +7,10 @@ int main()
 {
     Array_List<int> d;
     Array_List<int>::iterator iii;
-    iii == iii;
+    Array_List<double> dd;
+    dd.begin() == dd.end();
+    *dd.begin();
+    //d.begin() == d.end();
         for (int i = 0; i < 10; ++i) {
             d.push_back(i);
         }

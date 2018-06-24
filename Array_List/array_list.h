@@ -133,7 +133,7 @@ public:
         }
 
     private:
-        int* ar;
+        T* ar;
         int pos, cap;
     };
 
@@ -260,7 +260,7 @@ public:
 
 
     private:
-        int* ar;
+        T* ar;
         int pos;
         int cap;
     };
@@ -474,21 +474,21 @@ public:
     }
 
     void push_back(T value){
-        len++;
-        if(len >= ca_len - 2){
+        if(len + 1 >= ca_len - 2){
             copy();
         }
         minu(tail);
         a[tail] = value;
+        len++;
     }
 
     void push_front(T value){
-        len++;
-        if(len >= ca_len - 2){
+        if(len + 1 >= ca_len - 2){
             copy();
         }
         a[head] = value;
         plus(head);
+        len++;
     }
 
 
