@@ -60,6 +60,14 @@ public:
             return !(*this == b);
         }
 
+        bool operator==(const const_iterator &b){
+            return (pos == b.pos && cap == b.cap && ar == b.ar);
+        }
+
+        bool operator!=(const const_iterator &b){
+            return !(*this == b);
+        }
+
         iterator& operator+= (const int rhs){
             pos -= rhs;
             pos += cap;
@@ -180,6 +188,13 @@ public:
         bool operator!=(const const_iterator &b){
             return !(*this == b);
         }
+        bool operator==(const iterator &b){
+            return (pos == b.pos && cap == b.cap && ar == b.ar);
+        }
+
+        bool operator!=(const iterator &b){
+            return !(*this == b);
+        }
 
         const_iterator& operator+= (const int rhs){
             pos -= rhs;
@@ -255,16 +270,22 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 
-    Array_List(){
-        a = static_cast<T*>(operator new(sizeof(T) * 10));
-        ca_len = 10, len = 0;
-        head = tail = 0;
+    Array_List(): a(nullptr), ca_len(0), len(0), head(0), tail(0){}
+    Array_List(const Array_List& q):Array_List(){
+        for(const_iterator it = q.begin(); it != q.end(); it ++){
+            push_back(*it);
+        }
     }
     ~Array_List(){
         for(const_iterator it = begin(); it != end(); it ++){
             (*it).~T();
         }
         operator delete(a);
+    }
+    void operator=(Array_List& other){
+        for(const_iterator it = other.begin(); it != other.end(); it ++){
+            push_back(*it);
+        }
     }
 
     // void swap(T& A,T&B)
@@ -285,8 +306,9 @@ public:
         }
     }
 
-    const_iterator insert(const_iterator no, T const& value){
+    iterator insert(const_iterator no, T const& value){
         int x = no.position();
+       // std::cout << a[x]<<'\n';
         int kol;
         if(x > head){
             kol = ca_len - x + head ;
@@ -294,6 +316,7 @@ public:
             kol = head - x;
         }
         if(closer(x)){
+
             push_front(value);
             x = (head - kol + ca_len  - 1) % ca_len;
             int t = head - 1;
@@ -303,21 +326,24 @@ public:
                 t--;
                 t %= ca_len;
             }
-            return const_iterator(a, t, ca_len);
+            return iterator(a, t, ca_len);
         } else{
+
+
             push_back(value);
             x = (head - kol + ca_len) % ca_len;
             int t = tail;
-            while(x != (t + 1) % ca_len){
+           // std::cout << x<<' '<<t<<'\n';
+            while(x != t){
                 std::swap(a[t], a[(t + 1) % ca_len]);
                 t++;
                 t %= ca_len;
             }
-            return const_iterator(a, t, ca_len);
+            return iterator(a, t, ca_len);
         }
     }
 
-    const_iterator erase(const_iterator no){
+    iterator erase(const_iterator no){
         int x = no.position();
         if(closer(x)){
             int t = x;
@@ -327,7 +353,7 @@ public:
                 t %= ca_len;
             }
             pop_front();
-            return const_iterator(a, (x - 1 + ca_len) % ca_len, ca_len);
+            return iterator(a, (x - 1 + ca_len) % ca_len, ca_len);
         } else{
             int t = x;
             while(tail != t){
@@ -337,7 +363,7 @@ public:
                 t %= ca_len;
             }
             pop_back();
-            return const_iterator(a, x, ca_len);
+            return iterator(a, x, ca_len);
 
         }
 
@@ -389,8 +415,11 @@ public:
     }
 
     void copy(){
-        T* new_a = static_cast<T*>(operator new(sizeof(T) * ca_len * 2));
+
+        T* new_a = static_cast<T*>(operator new(sizeof(T) * std::max(10, ca_len * 2)));
+
         int new_head = 0;
+
         try{
             if(head >= tail){
                 for(int i = tail; i < head; i --){
@@ -410,14 +439,17 @@ public:
         } catch (std::runtime_error &e){
             operator delete(new_a);
         }
-
-        ca_len *= 2;
+        if(ca_len == 0){
+            ca_len = 10;
+        } else{
+            ca_len *= 2;
+        }
         operator delete(a);
         a = new_a;
         head = new_head;
         tail = 0;
     }
-    void minu(size_t &x){
+    void minu(int &x){
         if(x == 0){
             x = ca_len - 1;
         } else{
@@ -425,7 +457,7 @@ public:
         }
     }
 
-    void plus(size_t &x){
+    void plus(int &x){
         x++;
         if(x == ca_len){
             x = 0;
@@ -434,9 +466,8 @@ public:
 
     void push_back(T value){
         len++;
-        if(len == ca_len - 2){
+        if(len >= ca_len - 2){
             copy();
-
         }
         minu(tail);
         a[tail] = value;
@@ -444,7 +475,7 @@ public:
 
     void push_front(T value){
         len++;
-        if(len == ca_len - 2){
+        if(len >= ca_len - 2){
             copy();
         }
         a[head] = value;
@@ -474,7 +505,7 @@ public:
 
     T& operator[](size_t ind){
         int t = head;
-        t -= ind;
+        t -= ind + 1;
         t += ca_len;
         t %= ca_len;
         return a[t];
@@ -482,7 +513,7 @@ public:
 
     T& operator[](size_t ind) const{
         int t = head;
-        t -= ind;
+        t -= ind + 1;
         t += ca_len;
         t %= ca_len;
         return a[t];
@@ -491,6 +522,7 @@ public:
     T& back(){
         return a[tail];
     }
+
 
     T& front(){
         return a[(head + ca_len - 1) % ca_len];
@@ -511,8 +543,8 @@ public:
    friend void swap(Array_List<S>& first, Array_List<S>& second);
 
 private:
-    T* a;
-    size_t ca_len = 100, len = 0, head = 0, tail = 0;
+    T* a = nullptr;
+    int ca_len = 0, len = 0, head = 0, tail = 0;
 
 };
 
