@@ -40,29 +40,12 @@ public:
             return *this;
         }
 
-        T& operator*(){
-            return ar[pos];
+        bool operator==(const iterator &b){
+            return (pos == b.pos && cap == b.cap && ar == b.ar);
         }
 
-        iterator& operator++ (){
-            return *this += 1;
-        }
-
-        iterator& operator++ (int){
-
-            iterator it = *this;
-            ++*this;
-            return it;
-        }
-
-        iterator& operator--(){
-            return *this -= 1;
-        }
-
-        iterator& operator--(int){
-            iterator it = *this;
-            --*this;
-            return it;
+        bool operator!=(const iterator &b){
+            return !(*this == b);
         }
 
         iterator& operator+= (const int rhs){
@@ -72,22 +55,48 @@ public:
             return *this;
         }
 
+//        iterator operator+(iterator a, const int b){
+//            return a += b;
+//        }
+
+        iterator operator++ (int){
+
+            iterator it = *this;
+            ++*this;
+            return it;
+        }
+
+        iterator& operator++ (){
+            return *this += 1;
+        }
+
         iterator& operator-= (const int rhs){
             pos += rhs;
             pos %= cap;
             return *this;
         }
 
-        int position(){
-            return pos;
+//        iterator operator-(iterator a, const int b)
+//        {
+//            return a -= b;
+//        }
+
+//        int operator-(iterator a, iterator b){
+//            return a.pos - b.pos;
+//        }
+
+        iterator operator--(int){
+            iterator it = *this;
+            --*this;
+            return it;
         }
 
-        bool operator==(const iterator &b){
-            return (pos == b.pos && b.ar == ar && b.cap == cap);
+        iterator& operator--(){
+            return *this -= 1;
         }
 
-        bool operator!=(const iterator &b){
-            return !(*this == b);
+        T& operator*(){
+            return ar[pos];
         }
 
         bool operator> (iterator a){
@@ -105,6 +114,32 @@ public:
         bool operator<= (iterator a){
             return (pos <= a.pos);
         }
+
+
+
+
+//        friend bool operator==(iterator first, iterator second){
+//            return (first.pos == second.pos && first.ca_len == second.ca_len && first.ar == second.ar);
+//        }
+
+//        friend bool operator!=(iterator first, iterator second){
+//            return (first == second);
+//        }
+
+
+
+        int position(){
+            return pos;
+        }
+
+//        bool operator==(const iterator &b){
+//            return (pos == b.pos && b.ar == ar && b.cap == cap);
+//        }
+
+//        bool operator!=(const iterator &b){
+//            return !(*this == b);
+//        }
+
 
     private:
         int* ar;
@@ -151,33 +186,12 @@ public:
             return *this;
         }
 
-        const T& operator*(){
-            return ar[pos];
+        bool operator==(const const_iterator &b){
+            return (pos == b.pos && cap == b.cap && ar == b.ar);
         }
 
-        T* operator->() const {
-            return (a + pos);
-        }
-
-        const_iterator& operator++ (){
-            return *this += 1;
-        }
-
-        const_iterator& operator++ (int){
-
-            const_iterator it = *this;
-            ++*this;
-            return it;
-        }
-
-        const_iterator& operator--(){
-            return *this -= 1;
-        }
-
-        const_iterator& operator--(int){
-            const_iterator it = *this;
-            --*this;
-            return it;
+        bool operator!=(const const_iterator &b){
+            return !(*this == b);
         }
 
         const_iterator& operator+= (const int rhs){
@@ -187,22 +201,52 @@ public:
             return *this;
         }
 
+//        const_iterator operator+(const_iterator a, const int b){
+//            return a += b;
+//        }
+
+        const_iterator operator++ (int){
+
+            const_iterator it = *this;
+            ++*this;
+            return it;
+        }
+
+        const_iterator& operator++ (){
+            return *this += 1;
+        }
+
         const_iterator& operator-= (const int rhs){
             pos += rhs;
             pos %= cap;
             return *this;
         }
-        int position() const{
-            return pos;
+
+//        const_iterator operator-(const_iterator a, const int b){
+//            return a -= b;
+//        }
+
+        const_iterator operator--(int){
+            const_iterator it = *this;
+            --*this;
+            return it;
         }
 
-        bool operator == (const_iterator &b){
-            return (pos == b.pos && b.ar == ar && b.cap == cap);
+
+        const_iterator& operator--(){
+            return *this -= 1;
         }
 
-        bool operator != (const_iterator &b){
-            return !(*this == b);
+        const T& operator*(){
+            return ar[pos];
         }
+
+
+//        T* operator->() const {
+//            return (a + pos);
+//        }
+
+
 
         bool operator> (const_iterator a){
             return (pos > a.pos);
@@ -219,6 +263,14 @@ public:
         bool operator<= (const_iterator a){
             return (pos <= a.pos);
         }
+
+
+        int position() const{
+            return pos;
+        }
+
+
+
 
     private:
         int* ar;
@@ -313,6 +365,7 @@ public:
     iterator begin(){
         return iterator(a, (head - 1 + ca_len) % ca_len, ca_len);
     }
+
     const_iterator begin() const {
         return const_iterator(a, (head - 1 + ca_len)% ca_len, ca_len);
     }
@@ -441,11 +494,27 @@ public:
         return a[t];
     }
 
+    T& operator[](size_t ind) const{
+        int t = head;
+        t -= ind;
+        t += ca_len;
+        t %= ca_len;
+        return a[t];
+    }
+
     T& back(){
         return a[tail];
     }
 
     T& front(){
+        return a[(head + ca_len - 1) % ca_len];
+    }
+
+    T& back() const{
+        return a[tail];
+    }
+
+    T& front() const{
         return a[(head + ca_len - 1) % ca_len];
     }
 
