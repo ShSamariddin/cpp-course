@@ -6,6 +6,8 @@ using namespace std;
 int main()
 {
     Array_List<int> d;
+    Array_List<int>::iterator iii;
+    iii == iii;
         for (int i = 0; i < 10; ++i) {
             d.push_back(i);
         }

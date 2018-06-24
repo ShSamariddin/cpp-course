@@ -21,6 +21,7 @@ public:
         using pointer = T *;
         using reference = T &;
         using iterator_category = std::random_access_iterator_tag;
+        friend class const_iterator;
         friend iterator operator+(iterator a, const int & b)  {
             return a+=b;
         }
@@ -28,7 +29,6 @@ public:
             return a-=b;
         }
 
-        friend const_iterator;
         iterator(T *ar, int pos, const int &cap){
             this->ar = ar;
             this->pos = pos;
@@ -60,11 +60,11 @@ public:
             return !(*this == b);
         }
 
-        bool operator==(const const_iterator &b){
+        bool operator==(const const_iterator &b) const{
             return (pos == b.pos && cap == b.cap && ar == b.ar);
         }
 
-        bool operator!=(const const_iterator &b){
+        bool operator!=(const const_iterator &b) const{
             return !(*this == b);
         }
 
@@ -181,18 +181,18 @@ public:
             return *this;
         }
 
-        bool operator==(const const_iterator &b){
+        bool operator==(const const_iterator &b)const {
             return (pos == b.pos && cap == b.cap && ar == b.ar);
         }
 
-        bool operator!=(const const_iterator &b){
+        bool operator!=(const const_iterator &b)const {
             return !(*this == b);
         }
-        bool operator==(const iterator &b){
+        bool operator==(const iterator &b)const {
             return (pos == b.pos && cap == b.cap && ar == b.ar);
         }
 
-        bool operator!=(const iterator &b){
+        bool operator!=(const iterator &b)const {
             return !(*this == b);
         }
 
@@ -262,7 +262,7 @@ public:
     private:
         int* ar;
         int pos;
-        size_t cap;
+        int cap;
     };
 
     //friend Array_List;
@@ -282,23 +282,32 @@ public:
         }
         operator delete(a);
     }
-    void operator=(Array_List& other){
-        for(const_iterator it = other.begin(); it != other.end(); it ++){
-            push_back(*it);
-        }
+    Array_List& operator=(Array_List& other){
+//        if (this != &other) {
+//            Array_List copy_list(other);
+//            swap(this, &copy_list);
+//        }
+
+//        return *this;
+//        for(const_iterator it = other.begin(); it != other.end(); it ++){
+//            push_back(*it);
+//        }
+        Array_List<T> oth(other);
+        swap(*this, oth);
+        return *this;
     }
 
     // void swap(T& A,T&B)
 
     bool closer(int x){
         if(head > x){
-            if(head - x <= size() / 2){
+            if(head - x <= (int) size() / 2){
                 return true;
             } else{
                 return false;
             }
         } else{
-            if(head + ca_len - x + 1 <= size() / 2){
+            if(head + ca_len - x + 1 <= (int)size() / 2){
                 return true;
             } else{
                 return false;
@@ -536,7 +545,7 @@ public:
         return a[(head + ca_len - 1) % ca_len];
     }
 
-    size_t size(){
+    size_t size() const{
         return len;
     }
     template<typename S>
