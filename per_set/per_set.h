@@ -1,22 +1,22 @@
 #ifndef PER_SET_H
 #define PER_SET_H
 
-# include<bits/stdc++.h>
+# include<iostream>
 
+
+template<typename T>
 class per_set
 {
 public:
-    typedef int type;
-    struct  node:std::enable_shared_from_this<node>
-    {
-        type  key;
-        std::shared_ptr<node> left, right;
-        node(int key);
+    struct node{
+        node  *l, *r, *p;
+        T value;
         ~node();
-        node(std::shared_ptr<node> const &other);
-        node& operator=(const node& other);
-        pair<per_set::node, bool> insert(type x);
     };
+    template<typename T>
+    per_set(){}
 };
+
+
 
 #endif // SET_H
