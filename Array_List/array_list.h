@@ -272,12 +272,11 @@ public:
 
     Array_List(): a(nullptr), ca_len(0), len(0), head(0), tail(0){}
     Array_List(const Array_List& q):Array_List(){
-        if(len != 0){
             for(const_iterator it = q.begin(); it != q.end(); it ++){
 
                 push_back(T(*it));
             }
-        }
+
     }
     ~Array_List(){
         for(const_iterator it = begin(); it != end(); it ++){
@@ -287,7 +286,8 @@ public:
     }
 
     Array_List& operator=(Array_List& other){
-//        if (this != &other) {
+
+        //        if (this != &other) {
 //            Array_List copy_list(other);
 //            swap(this, &copy_list);
 //        }
@@ -298,7 +298,7 @@ public:
 //        }
         Array_List<T> oth(other);
         swap(*this, oth);
-        return *this;
+
     }
 
     // void swap(T& A,T&B)

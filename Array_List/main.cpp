@@ -16,13 +16,12 @@ int main()
 
     Array_List<int> d1;
     Array_List<int> d2(d1);
-    d1.push_back(2);
-    d1.push_back(3);
-    d1.push_back(4);
-    d1.push_back(5);
-    for(Array_List<int>::iterator it = d1.begin(); it != d1.end(); it++){
-        cout << *it<<' ';
+
+    d1 = d;
+    for(auto i:d1){
+        cout <<i<<'\n';
     }
+
 //    Array_List<int>::iterator iii;
 //    Array_List<double> dd;
 //    dd.begin() == dd.end();
