@@ -256,12 +256,15 @@ public:
 
 
     Array_List(){
-        a = static_cast<T*>(operator new[](sizeof(T) * 10));
+        a = static_cast<T*>(operator new(sizeof(T) * 10));
         ca_len = 10, len = 0;
         head = tail = 0;
     }
     ~Array_List(){
-        delete[] a;
+        for(const_iterator it = begin(); it != end(); it ++){
+            (*it).~T();
+        }
+        operator delete(a);
     }
 
     // void swap(T& A,T&B)
@@ -380,14 +383,13 @@ public:
     }
 
     void clear(){
-        delete[] a;
-        a = static_cast<T*>(operator new[](sizeof(T) * 10));
-        ca_len = 10;len = 0;
-        head = tail = 0;
+       while(size() != 0){
+           pop_back();
+       }
     }
 
     void copy(){
-        T* new_a = static_cast<T*>(operator new[](sizeof(T) * ca_len * 2));
+        T* new_a = static_cast<T*>(operator new(sizeof(T) * ca_len * 2));
         int new_head = 0;
         try{
             if(head >= tail){
@@ -406,11 +408,11 @@ public:
                 }
             }
         } catch (std::runtime_error &e){
-            delete new_a;
+            operator delete(new_a);
         }
 
         ca_len *= 2;
-        delete[] a;
+        operator delete(a);
         a = new_a;
         head = new_head;
         tail = 0;
@@ -455,6 +457,7 @@ public:
             throw std::runtime_error("my_error1");
         } else{
             len--;
+            a[tail].~T();
             plus(tail);
         }
     }
@@ -465,6 +468,7 @@ public:
         } else{
             len--;
             minu(head);
+            a[head].~T();
         }
     }
 

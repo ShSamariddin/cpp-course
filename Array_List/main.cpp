@@ -15,9 +15,8 @@ int main()
         it += 7;
         it = buff.insert(it, -7);
         cout << *it<<'\n';
-        for(auto x : buff){
-            cout <<x<<'\n';
-        }
+
+        cout << buff.back()<<' '<<buff.front();
         //buff.rbegin();
         /*for(auto i:buff){
             cout<<i<<'\n';
