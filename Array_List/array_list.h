@@ -25,7 +25,7 @@ public:
 
         iterator(){}
 
-        iterator(const Array_List::iterator& other){
+        iterator(const iterator& other){
             pos = other.pos;
             ar = other.ar;
             cap = other.cap;
@@ -41,10 +41,6 @@ public:
         }
 
         T operator*(){
-            /*for(int i = 0; i < cap; i ++){
-                std::cout << ar[i]<<' ';
-            }
-            std::cout<<'\n'<<' '<<ar[5]<<' '<<pos<<'\n';*/
             return ar[pos];
         }
 
@@ -156,11 +152,11 @@ public:
         }
 
         const T operator*(){
-            /*for(int i = 0; i < cap; i ++){
-                std::cout << ar[i]<<' ';
-            }
-            std::cout<<'\n'<<' '<<ar[5]<<' '<<pos<<'\n';*/
             return ar[pos];
+        }
+
+        T* operator->() const {
+            return (a + pos);
         }
 
         const_iterator& operator++ (){
@@ -200,11 +196,11 @@ public:
             return pos;
         }
 
-        bool operator==(const_iterator &b){
+        bool operator == (const_iterator &b){
             return (pos == b.pos && b.ar == ar && b.cap == cap);
         }
 
-        bool operator!=(const_iterator &b){
+        bool operator != (const_iterator &b){
             return !(*this == b);
         }
 
@@ -262,10 +258,17 @@ public:
         }
     }
 
-    void insert(const iterator no, T const& value){
+    void insert(const_iterator no, T const& value){
         int x = no.position();
+        int kol;
+        if(x > head){
+            kol = ca_len - x + head ;
+        } else{
+            kol = head - x;
+        }
         if(closer(x)){
             push_front(value);
+            x = (head - kol + ca_len  - 1) % ca_len;
             int t = head - 1;
 
             while(x != (t - 1 + ca_len) % ca_len){
@@ -274,8 +277,8 @@ public:
                 t %= ca_len;
             }
         } else{
-
             push_back(value);
+            x = (head - kol + ca_len) % ca_len;
             int t = tail;
             while(x != (t + 1) % ca_len){
                 std::swap(a[t], a[(t + 1) % ca_len]);
@@ -287,8 +290,6 @@ public:
 
     void erase(const_iterator no){
         int x = no.position();
-        std::cout << x<<'\n';
-
         if(closer(x)){
             int t = x;
             while(head != (t + 1) % ca_len){
@@ -299,7 +300,7 @@ public:
             pop_front();
         } else{
             int t = x;
-            while(tail != (t - 1 + ca_len) % ca_len){
+            while(tail != t){
                 std::swap(a[t], a[(t - 1 + ca_len) % ca_len]);
                 t--;
                 t += ca_len;
@@ -310,10 +311,10 @@ public:
     }
 
     iterator begin(){
-        return iterator(a, head - 1, ca_len);
+        return iterator(a, (head - 1 + ca_len) % ca_len, ca_len);
     }
     const_iterator begin() const {
-        return const_iterator(a, head - 1, ca_len);
+        return const_iterator(a, (head - 1 + ca_len)% ca_len, ca_len);
     }
 
     reverse_iterator rbegin(){
@@ -325,11 +326,11 @@ public:
     }
 
     iterator end(){
-        return iterator(a, tail - 1, ca_len);
+        return iterator(a,(tail - 1 + ca_len) % ca_len, ca_len);
     }
 
     const_iterator end() const {
-        return const_iterator(a, tail - 1, ca_len);
+        return const_iterator(a, (tail - 1 + ca_len) % ca_len, ca_len);
     }
 
     reverse_iterator rend(){
@@ -359,17 +360,16 @@ public:
         T* new_a = static_cast<T*>(operator new[](sizeof(T) * ca_len * 2));
         int new_head = 0;
         if(head >= tail){
-            for(int i = head - 1; i >= tail; i --){
+            for(int i = tail; i < head; i --){
                 new_a[new_head] = a[i];
                 new_head++;
             }
         } else{
-            for(int i = head - 1; i >= 0; i --){
+            for(int i = tail; i < ca_len; i ++){
                 new_a[new_head] = a[i];
                 new_head++;
             }
-
-            for(int i = tail; i < ca_len; i ++){
+            for(int i = 0; i < head; i ++){
                 new_a[new_head] = a[i];
                 new_head++;
             }
