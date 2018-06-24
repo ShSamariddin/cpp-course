@@ -298,6 +298,7 @@ public:
 //        }
         Array_List<T> oth(other);
         swap(*this, oth);
+        return *this;
 
     }
 
