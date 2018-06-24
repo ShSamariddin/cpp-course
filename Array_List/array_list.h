@@ -16,6 +16,13 @@ public:
 
     struct iterator
     {
+        friend iterator operator+(iterator a, const int & b)  {
+            return a+=b;
+        }
+        friend iterator operator-(iterator a, const int & b)  {
+            return a-=b;
+        }
+
         friend const_iterator;
         iterator(T *ar, int pos, const int &cap){
             this->ar = ar;
@@ -40,11 +47,12 @@ public:
             return *this;
         }
 
-        bool operator==(const iterator &b){
+        bool operator==(const iterator &b) const{
             return (pos == b.pos && cap == b.cap && ar == b.ar);
         }
 
-        bool operator!=(const iterator &b){
+        bool operator!=(const iterator &b) const{
+            std::cout <<"sa";
             return !(*this == b);
         }
 
@@ -55,9 +63,6 @@ public:
             return *this;
         }
 
-//        iterator operator+(iterator a, const int b){
-//            return a += b;
-//        }
 
         iterator operator++ (int){
 
@@ -76,10 +81,6 @@ public:
             return *this;
         }
 
-//        iterator operator-(iterator a, const int b)
-//        {
-//            return a -= b;
-//        }
 
 //        int operator-(iterator a, iterator b){
 //            return a.pos - b.pos;
@@ -115,37 +116,14 @@ public:
             return (pos <= a.pos);
         }
 
-
-
-
-//        friend bool operator==(iterator first, iterator second){
-//            return (first.pos == second.pos && first.ca_len == second.ca_len && first.ar == second.ar);
-//        }
-
-//        friend bool operator!=(iterator first, iterator second){
-//            return (first == second);
-//        }
-
-
-
         int position(){
             return pos;
         }
-
-//        bool operator==(const iterator &b){
-//            return (pos == b.pos && b.ar == ar && b.cap == cap);
-//        }
-
-//        bool operator!=(const iterator &b){
-//            return !(*this == b);
-//        }
-
 
     private:
         int* ar;
         int pos, cap;
     };
-
 
     struct const_iterator
     {
@@ -201,10 +179,6 @@ public:
             return *this;
         }
 
-//        const_iterator operator+(const_iterator a, const int b){
-//            return a += b;
-//        }
-
         const_iterator operator++ (int){
 
             const_iterator it = *this;
@@ -222,10 +196,6 @@ public:
             return *this;
         }
 
-//        const_iterator operator-(const_iterator a, const int b){
-//            return a -= b;
-//        }
-
         const_iterator operator--(int){
             const_iterator it = *this;
             --*this;
@@ -240,13 +210,6 @@ public:
         const T& operator*(){
             return ar[pos];
         }
-
-
-//        T* operator->() const {
-//            return (a + pos);
-//        }
-
-
 
         bool operator> (const_iterator a){
             return (pos > a.pos);
@@ -521,9 +484,8 @@ public:
     size_t size(){
         return len;
     }
-
-    template <typename S>
-    void swap(Array_List<S> first, Array_List<S> second);
+    template<typename S>
+   friend void swap(Array_List<S>& first, Array_List<S>& second);
 
 private:
     T* a;
@@ -531,9 +493,19 @@ private:
 
 };
 
+/*template <typename T>
+typename Array_List<T>::iterator operator+(typename Array_List<T>::iterator a, const int & b) {
+    return a+=b;
+}*/
+
+/*template <typename T>
+typename Array_List<T>::iterator operator-(typename Array_List<T>::iterator a, const int & b) {
+    return a-=b;
+}*/
+
 template <typename T>
-void swap(Array_List<T> first, Array_List<T> second){
-    std::swap(first.pos, second.pos);
+void swap(Array_List<T>& first, Array_List<T>& second){
+    //std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
     std::swap(second.a, first.a);
     std::swap(second.ca_len, first.ca_len);
     std::swap(first.head, second.head);

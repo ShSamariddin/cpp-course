@@ -5,19 +5,37 @@ using namespace std;
 
 int main()
 {
-    Array_List<int> a;
-        for(int i = 0; i < 10; i ++){
-            a.push_back(i);
+    Array_List<int> buff;
+
+        for (int i = 1; i <= 4; i++) {
+        buff.push_back(i);
+        }
+        for(int i = 5; i <= 100; i++) {
+        buff.push_front(i);
+        //buff.erase(buff.end() - 2);
         }
 
-        bool wr = true;
-        Array_List<int>::const_iterator it1 = a.begin();
-        Array_List<int>::const_iterator it2 = a.begin();
-        if(it1 == a.begin()){
-            cout << "samar the best";
+
+//        Array_List<int>::iterator const  = buff.begin();
+
+
+
+        buff.rbegin();
+        /*for(auto i:buff){
+            cout<<i<<'\n';
+        }
+        swap(buff, buff);
+        for(auto i:buff){
+            cout<<i<<'\n';
         }
 
+        buff.begin();
 
+        buff.end();
+
+        Array_List<int> const& buff_ref = buff;
+
+        buff_ref.begin();*/
 }
 
 
