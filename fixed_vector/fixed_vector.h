@@ -61,12 +61,13 @@ public:
             return !(*this == b);
         }
 
-        iterator &operator+=(const int rhs) {
+        iterator &operator+=(int rhs) {
             // pos > cap
-            pos += rhs;
-            if (pos >= cap || pos < 0) {
+            if (pos + rhs >= cap || pos + rhs < 0) {
                 throw "Error";
             }
+            pos += rhs;
+
             return *this;
         }
 
@@ -83,10 +84,10 @@ public:
         }
 
         iterator &operator-=(const int rhs) {
-            pos -= rhs;
-            if (pos < 0 || pos >= cap) {
+            if (pos - rhs < 0 || pos - rhs >= cap) {
                 throw "Error";
             }
+            pos -= rhs;
             return *this;
         }
 
@@ -113,7 +114,7 @@ public:
             return *((T *) ar + pos);
         }
 
-        bool operator>(iterator a) {
+        bool operator>(const iterator &a) {// hal kn
             return (pos > a.pos);
         }
 
@@ -133,6 +134,7 @@ public:
         T *ar;
         int pos, cap;
     };
+
 
     struct const_iterator {
         using difference_type = std::ptrdiff_t;
@@ -183,10 +185,10 @@ public:
         }
 
         const_iterator &operator+=(const int rhs) {
-            pos += rhs;
-            if (pos >= cap && pos < 0) {
+            if (pos + rhs >= cap && pos + rhs < 0) {
                 throw "My Error";
             }
+            pos += rhs;
             return *this;
         }
 
@@ -202,10 +204,10 @@ public:
         }
 
         const_iterator &operator-=(const int rhs) {
-            pos -= rhs;
-            if (pos < 0 || pos >= cap) {
+            if (pos - rhs < 0 || pos - rhs >= cap) {
                 throw "my error";
             }
+            pos -= rhs;
             return *this;
         }
 
@@ -240,10 +242,11 @@ public:
             return (pos <= a.pos);
         }
 
-
         int position() const {
             return pos;
         }
+
+        friend class Array_List;
 
 
     private:
@@ -289,17 +292,11 @@ public:
 
 
     iterator begin() {//+
-        if (ca_len == 0) {
-            return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), 0, 0);
-        }
-        return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), 0, ca_len);
+        return iterator(reinterpret_cast<T *>(data), 0, len);
     }
 
     const_iterator begin() const {//+
-        if (ca_len == 0) {
-            return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), 0, 0);
-        }
-        return const_iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), 0, ca_len);
+        return iterator(reinterpret_cast<T *>(data + 0), 0, len);
     }
 
     reverse_iterator rbegin() {//+
@@ -311,17 +308,11 @@ public:
     }
 
     iterator end() {//+
-        if (ca_len == 0) {
-            return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), 0, 0);
-        }
-        return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), len, ca_len);
+        return iterator(reinterpret_cast<T *>(data), len, len);
     }
 
     const_iterator end() const {//+
-        if (ca_len == 0) {
-            return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), 0, 0);
-        }
-        return const_iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), len, ca_len);
+        return iterator(reinterpret_cast<T *>(data), len, len);
     }
 
     reverse_iterator rend() {//+
@@ -340,20 +331,19 @@ public:
         while (!empty()) {
             pop_back();
         }
-        len = 0;
     }
 
     iterator insert(const_iterator no, T const &value) {
         if (len >= ca_len) {
             throw std::runtime_error("my_error1");
         }
-        int pos_i = no.position();
+        int pos_i = no.pos;
         for (int i = len; i > pos_i; i--) {
-            new(data + i)T(*reinterpret_cast<const T *>(data + i - 1));
+            new(data + i) T(*reinterpret_cast<T*>(data + i - 1));
         }
         len++;
-        new(data + pos_i)T(value);
-        return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), pos_i, ca_len);
+        new(data + pos_i) T(value);
+        return iterator(reinterpret_cast<T *> (data + 0), pos_i, ca_len);
     }
 
     iterator erase(const_iterator no) {
@@ -368,11 +358,11 @@ public:
         return iterator(const_cast<T *>(reinterpret_cast<const T *> (data + 0)), pos_i, ca_len);
     }
 
-    void push_back(T value) {//+
+    void push_back(const T &value) {//+
         if (len >= ca_len) {
             throw std::runtime_error("my_error1");
         }
-        new(data + len)T(value);
+        new(data + len) T(value);
         len++;
     }
 
@@ -380,7 +370,7 @@ public:
         if (len == 0) {
             throw std::runtime_error("my_error1");
         } else {
-            reinterpret_cast<const T *>(data + len - 1)->~T();
+            reinterpret_cast<T *>(data + len - 1)->~T();
             len--;
         }
     }
@@ -390,7 +380,7 @@ public:
         return *((T *) data + ind);
     }
 
-    T &operator[](size_t ind) const {//+
+    const T &operator[](size_t ind) const {//+
         return *((T *) data + ind);
     }
 
@@ -403,23 +393,23 @@ public:
         return *((T *) data + 0);
     }
 
-    T &back() const {//+
+    const T &back() const {//+
         return *((T *) data + len - 1);
     }
 
-    T &front() const {//+
+    const T &front() const {//+
         return *((T *) data + 0);
     }
 
-    size_t max_size() const {
+    const size_t max_size() const {
         return ca_len - 4;
     }
 
-    size_t capacity() const {
+    const size_t capacity() const {
         return ca_len - 4;
     }
 
-    size_t size() const {//+
+    const size_t size() const {//+
         return len;
     }
 
