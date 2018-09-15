@@ -1,5 +1,5 @@
-#ifndef FIXED_VECTOR
-#define FIXED_VECTOR
+#ifndef UN3_FIXED_VECTOR
+#define UN3_FIXED_VECTOR
 
 # include<iostream>
 # include<cmath>
@@ -29,11 +29,7 @@ public:
             return a-=b;
         }
 
-        iterator(T* ar, int pos, const int &cap){
-            this->ar = ar;
-            this->pos = pos;
-            this->cap = cap;
-        }
+        iterator(T* ar, int pos, int cap): ar(ar), pos(pos), cap(cap){}
 
         iterator():ar(nullptr), pos(0), cap(0){}
 
@@ -65,12 +61,16 @@ public:
         }
 
         iterator& operator+= (const int rhs){
+            // pos > cap
             pos += rhs;
+            if(pos >= cap || pos < 0){
+                throw "Error";
+            }
             return *this;
         }
 
 
-        iterator operator++ (int){
+        const iterator operator++ (int){
 
             iterator it = *this;
             ++*this;
@@ -80,18 +80,24 @@ public:
         iterator& operator++ (){
             return *this += 1;
         }
-
         iterator& operator-= (const int rhs){
             pos -= rhs;
+            if(pos < 0 || pos >= cap){
+                throw "Error";
+            }
             return *this;
         }
 
 
-//        int operator-(iterator a, iterator b){
-//            return a.pos - b.pos;
-//        }
+        friend int operator-(iterator a, iterator b){
+            return a.pos - b.pos;
+        }
 
-        iterator operator--(int){
+        friend int operator+(iterator a, iterator b){
+            return a.pos + b.pos;
+        }
+
+        const iterator operator--(int){
             iterator it = *this;
             --*this;
             return it;
@@ -119,10 +125,6 @@ public:
 
         bool operator<= (iterator a){
             return (pos <= a.pos);
-        }
-
-        int position(){
-            return pos;
         }
 
     private:
@@ -179,10 +181,14 @@ public:
 
         const_iterator& operator+= (const int rhs){
             pos += rhs;
+            if(pos >= cap && pos < 0)
+            {
+                throw "My Error";
+            }
             return *this;
         }
 
-        const_iterator operator++ (int){
+        const const_iterator operator++ (int){
 
             const_iterator it = *this;
             ++*this;
@@ -195,10 +201,13 @@ public:
 
         const_iterator& operator-= (const int rhs){
             pos -= rhs;
+            if(pos < 0 || pos >= cap){
+                throw "my error";
+            }
             return *this;
         }
 
-        const_iterator operator--(int){
+        const const_iterator operator--(int){
             const_iterator it = *this;
             --*this;
             return it;
@@ -248,10 +257,17 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 
-    Array_List(): data(), ca_len(s_si){}
+    Array_List(): data(), ca_len(s_si + 4){}
     Array_List(const Array_List& q):Array_List(){
-        for(const_iterator it = q.begin(); it != q.end(); it ++){
-            push_back(T(*it));
+        try {
+            for(const_iterator it = q.begin(); it != q.end(); it ++) {
+                //std::cout <<"sa"<<*it<<"sa\n";
+                push_back(T(*it));
+            }
+        } catch(...) {
+            while(!empty()) {
+                pop_back();
+            }
         }
 
     }
@@ -261,34 +277,27 @@ public:
         }
     }
 
-  /*  Array_List& operator=(Array_List& other){
+    Array_List& operator=(Array_List const& other){
+        std::cout<<"samar";
         Array_List<T, s_si> oth(other);
         swap(*this, oth);
         return *this;
 
-    }*/
-
-    // void swap(T& A,T&B)
-
-    bool closer(int x){
-        if(head > x){
-            return (head - x <= (int) size() / 2);
-        } else{
-            return ((head + ca_len - x + 1 <= (int)size() / 2));
-        }
     }
+
+
     iterator begin(){//+
         if(ca_len == 0){
-            return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), 0, 0);
+            return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), 0, 0);
         }
-        return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), 0, ca_len);
+        return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), 0, ca_len);
     }
 
     const_iterator begin() const {//+
         if(ca_len == 0){
-            return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), 0, 0);
+            return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), 0, 0);
         }
-        return const_iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), 0 , ca_len);
+        return const_iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), 0 , ca_len);
     }
 
     reverse_iterator rbegin(){//+
@@ -301,16 +310,16 @@ public:
 
     iterator end(){//+
         if(ca_len == 0){
-            return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), 0, 0);
+            return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), 0, 0);
         }
-        return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)),head - 1, ca_len);
+        return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)),head , ca_len);
     }
 
     const_iterator end() const {//+
         if(ca_len == 0){
-            return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), 0, 0);
+            return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), 0, 0);
         }
-        return const_iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), head - 1, ca_len);
+        return const_iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), head, ca_len);
     }
 
     reverse_iterator rend(){//+
@@ -325,6 +334,14 @@ public:
         return (size() == 0);
     }
 
+    void clear(){
+        while(!empty()){
+            pop_back();
+        }
+        len = 0;
+        head = 0;
+    }
+
     iterator insert(const_iterator no, T const& value){
         if(len >= ca_len) {
             throw std::runtime_error("my_error1");
@@ -336,17 +353,20 @@ public:
         }
         head++;
         new(data+pos_i)T(value);
-        return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), pos_i, ca_len);
+        return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), pos_i, ca_len);
     }
 
     iterator erase(const_iterator no){
         int pos_i = no.position();
         len--;
-        for(int i = pos_i; i < head; i ++){
-            new(data+i)T(*reinterpret_cast<const T*>(data + i + 1));
+        // redo
+        for(int i = pos_i; i < len; i ++){
+            // make delete
+            //new(data+i)T(*reinterpret_cast<const T*>(data + i + 1));
+            new(data+i)T((*this)[i+1]);
         }
         head--;
-        return iterator(const_cast<int *>(reinterpret_cast<const int*> (data + 0)), pos_i, ca_len);
+        return iterator(const_cast<T *>(reinterpret_cast<const T*> (data + 0)), pos_i, ca_len);
     }
 
     void push_back(T value){//+
@@ -354,7 +374,7 @@ public:
             throw std::runtime_error("my_error1");
         }
         new(data + head)T(value);
-        len++;
+        len++; // len == (head - data) / sizeof(T)
         head++;
     }
 
@@ -371,71 +391,65 @@ public:
 
     T& operator[](size_t ind){//+
         return *((T*)data + ind);
-        //return a[t];
     }
 
     T& operator[](size_t ind) const{//+
         return *((T*)data+ind);
-        //return a[t];
     }
 
     T& back(){//+
         return *((T*)data+head - 1);
-        //return a[tail];
     }
 
 
     T& front(){//+
         return *((T*)data+0);
-        //return a[(head + ca_len - 1) % ca_len];
     }
 
     T& back() const{//+
         return *((T*)data+head - 1);
-        //return a[tail];
     }
 
     T& front() const{//+
         return *((T*)data + 0);
-        //return data[(head + ca_len - 1) % ca_len];
     }
 
     size_t max_size() const{
-        return ca_len;
+        return ca_len-4;
     }
 
-    size_t capcity() const{
-        return ca_len;
+    size_t capacity() const{
+        return ca_len - 4;
     }
 
     size_t size() const{//+
         return len;
     }
 
-    /*template<typename S, size_t  ss_si>
-    friend void swap(Array_List<S, ss_si>& first, Array_List<S, ss_si>& second);*/
+    template<typename S, size_t  ss_si>
+    friend void swap(Array_List<S, ss_si>& first, Array_List<S, ss_si>& second);
 
 private:
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[s_si];
     size_t ca_len = 0, len = 0, head = 0;
 };
 
-/*template <typename T>
-typename Array_List<T>::iterator operator+(typename Array_List<T>::iterator a, const int & b) {
+template <typename T, size_t ss_s>
+typename Array_List<T, ss_s>::iterator operator+(typename Array_List<T, ss_s>::iterator a, const int & b) {
     return a+=b;
-}*/
+}
 
-/*template <typename T>
-typename Array_List<T>::iterator operator-(typename Array_List<T>::iterator a, const int & b) {
+template <typename T, size_t ss_s>
+typename Array_List<T, ss_s>::iterator operator-(typename Array_List<T, ss_s>::iterator a, const int & b) {
     return a-=b;
-}*/
+}
 
-/*template <typename T>
-void swap(Array_List<T>& first, Array_List<T>& second){
-    std::swap(second.a, first.a);
+template <typename T, size_t ss_s>
+void swap(Array_List<T, ss_s>& first, Array_List<T, ss_s>& second){
+    std::swap(second.data, first.data);
     std::swap(second.ca_len, first.ca_len);
     std::swap(first.head, second.head);
-    std::swap(first.tail, second.tail);
+    std::swap(first.len, second.len);
 }
-*/
+
 #endif // ARRAY_LIST_H
