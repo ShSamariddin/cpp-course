@@ -9,29 +9,30 @@
 #include <iostream>
 
 template<typename T, size_t si>
-class fixed_vector{
+class fixed_vector {
 public:
-    using iterator = T*;
-    using const_iterator = const T*;
+    using iterator = T *;
+    using const_iterator = const T *;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
-    iterator begin(){
-        return iterator (reinterpret_cast<T*>(data));
+
+    iterator begin() {
+        return iterator(reinterpret_cast<T *>(data));
     }
 
-    const_iterator begin() const{
-        return const_iterator(const_cast<T*>(reinterpret_cast<const T*>(data)));
+    const_iterator begin() const {
+        return const_iterator((reinterpret_cast<const T *>(data)));
     }
 
-    iterator end(){
+    iterator end() {
         return begin() + pos;
     }
 
-    const_iterator end() const{
+    const_iterator end() const {
         return begin() + pos;
     }
 
-    const_iterator cend() const{
+    const_iterator cend() const {
         return end();
     }
 
@@ -39,11 +40,11 @@ public:
         return begin();
     }
 
-    reverse_iterator rbegin(){
+    reverse_iterator rbegin() {
         return reverse_iterator(end());
     }
 
-    reverse_iterator  rend() {
+    reverse_iterator rend() {
         return reverse_iterator(begin());
     }
 
@@ -51,102 +52,104 @@ public:
         return const_reverse_iterator(end());
     }
 
-    const_reverse_iterator rend() const{
+    const_reverse_iterator rend() const {
         return const_reverse_iterator(begin());
     }
 
-    const_reverse_iterator crbegin() const{
+    const_reverse_iterator crbegin() const {
         return const_reverse_iterator(end());
     }
 
-    const_reverse_iterator crend() const{
+    const_reverse_iterator crend() const {
         return const_reverse_iterator(begin());
     }
 
 private:
 public:
-    fixed_vector(): pos(0){}
-    fixed_vector(const fixed_vector &other) : data(other.data), pos(other.pos){}
+    fixed_vector() : pos(0) {}
 
-    bool empty(){//+
+    fixed_vector(const fixed_vector &other) : data(other.data), pos(other.pos) {}
+
+    bool empty() const {//+
         return !pos;
     }
 
-    constexpr size_t size(){//+
+    size_t size() const {//+
         return pos;
     }
 
-    constexpr size_t max_size(){//+
+    constexpr size_t max_size() const {//+
         return si;
     }
 
-    const size_t capacity(){//+
+    constexpr size_t capacity() const {//+
         return si;
     }
 
-    void push_back(const T &value){//+
+    void push_back(const T &value) {//+
         assert(pos < si);
         new(&data[pos])T(value);
         pos++;
     }
 
-    void pop_back(){//+
+    void pop_back() {//+
         assert(pos != 0);
-        reinterpret_cast<T*> (&data[pos - 1])->~T();
+        reinterpret_cast<T *> (&data[pos - 1])->~T();
         pos--;
     }
 
-    void clear(){//+
-        while(pos){
+    void clear() {//+
+        while (pos) {
             pop_back();
         }
     }
 
-    T& back(){//+
-        return *reinterpret_cast<T*> (&data[pos - 1]);
+    T &back() {//+
+        return *reinterpret_cast<T *> (&data[pos - 1]);
     }
 
-    const T& back() const{
-        return *reinterpret_cast<T*> (&data[pos - 1]);
+    const T &back() const {
+        return *reinterpret_cast<const T *> (&data[pos - 1]);
     }
 
-    T& front(){//+
-        return *reinterpret_cast<T*> (&data[0]);
+    T &front() {//+
+        return *reinterpret_cast<T *> (&data[0]);
     }
 
-    const T& front() const{
-        return *reinterpret_cast<T*> (&data[0]);
+    const T &front() const {
+        return *reinterpret_cast<const T *> (&data[0]);
     }
 
-    T&  operator[] (const int &ind){//+
-        return *reinterpret_cast<T*> (&data[ind]);
+    T &operator[](const size_t ind) {//+
+        return *reinterpret_cast<T *> (&data[ind]);
     }
 
-    const T& operator[](const int &ind) const {
-        return *reinterpret_cast<T*>(&data[ind]);
+    const T &operator[](const size_t ind) const {
+        return *reinterpret_cast<const T *>(&data[ind]);
     }
 
-    iterator erase(const_iterator er_pos){
+    iterator erase(const_iterator er_pos) {
         int i = std::distance(cbegin(), er_pos);
-      //  std::cout <<i<<' '<<size()<<' ';
-        for(;i + 1 < size(); i ++){
+        for (; i + 1 < size(); i++) {
             data[i] = data[i + 1];
         }
         pop_back();
         return iterator(er_pos);
     }
 
-    iterator insert(iterator in_pos, T const& value){
+    iterator insert(iterator in_pos, T const &value) {
         push_back(value);
         int x = std::distance(begin(), in_pos);
-        for(int i = size() - 1; i >= x + 1; i --){
+        for (int i = size() - 1; i >= x + 1; i--) {
             swap(data[i], data[i - 1]);
         }
         return in_pos;
     }
+
 private:
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[si];
     size_t pos;
 
 };
+
 #endif //UNTITLED3_FIXED_VEC_H
