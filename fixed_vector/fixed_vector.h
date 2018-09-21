@@ -120,16 +120,16 @@ public:
         return *reinterpret_cast<const T *> (&data[0]);
     }
 
-    T &operator[](const size_t ind) {//+
+    T &operator[](size_t ind) {//+
         return *reinterpret_cast<T *> (&data[ind]);
     }
 
-    const T &operator[](const size_t ind) const {
+    const T &operator[](size_t ind) const {
         return *reinterpret_cast<const T *>(&data[ind]);
     }
 
     iterator erase(const_iterator er_pos) {
-        int i = std::distance(cbegin(), er_pos);
+        auto i = static_cast<size_t>(std::distance(cbegin(), er_pos));
         for (; i + 1 < size(); i++) {
             data[i] = data[i + 1];
         }
@@ -137,13 +137,13 @@ public:
         return iterator(er_pos);
     }
 
-    iterator insert(iterator in_pos, T const &value) {
+    iterator insert(const_iterator in_pos, T const &value) {
         push_back(value);
-        int x = std::distance(begin(), in_pos);
-        for (int i = size() - 1; i >= x + 1; i--) {
+        auto x = static_cast<size_t>(std::distance(cbegin(), in_pos));
+        for (auto i = size() - 1; i >= x + 1; i--) {
             swap(data[i], data[i - 1]);
         }
-        return in_pos;
+        return iterator(in_pos);
     }
 
 private:
