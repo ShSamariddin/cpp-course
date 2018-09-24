@@ -1,9 +1,9 @@
 //
-// Created by Acer on 17.09.2018.
+// Created by Samariddin on 24.09.2018.
 //
 
-#ifndef UNTITLED3_FIXED_VEC_H
-#define UNTITLED3_FIXED_VEC_H
+#ifndef UNTITLED_FIXED_VECTOR_H
+#define UNTITLED_FIXED_VECTOR_H
 
 # include <assert.h>
 #include <iostream>
@@ -69,15 +69,20 @@ public:
     fixed_vector() : pos(0) {}
 
     fixed_vector(const fixed_vector &other){
-        pos = 0;
-        for(std::size_t i = 0; i < other.pos; i++){
-            push_back(other[i]);
+        try {
+            pos = 0;
+            for(const_iterator it = other.begin(); it != other.end(); it ++) {
+                push_back(T(*it));
+            }
+        } catch(...) {
+            while(!empty()) {
+                pop_back();
+            }
         }
     }
     fixed_vector& operator=(const fixed_vector& other){
         fixed_vector new_other(other);
-        std::swap(new_other.data, data);
-        std::swap(new_other.pos, pos);
+        swap(*this, new_other);
         return *this;
     }
 
@@ -163,6 +168,10 @@ public:
         }
         return iterator(in_pos);
     }
+    friend void swap(fixed_vector &first, fixed_vector &second) noexcept {
+        std::swap(first.data, second.data);
+        std::swap(first.pos, second.pos);
+    }
 
 
 private:
@@ -171,4 +180,5 @@ private:
 
 };
 
-#endif //UNTITLED3_FIXED_VEC_H
+
+#endif //UNTITLED_FIXED_VECTOR_H
