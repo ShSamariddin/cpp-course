@@ -68,7 +68,25 @@ private:
 public:
     fixed_vector() : pos(0) {}
 
-    fixed_vector(const fixed_vector &other) : data(other.data), pos(other.pos) {}
+    fixed_vector(const fixed_vector &other){
+        pos = 0;
+        for(std::size_t i = 0; i < other.pos; i++){
+            push_back(other[i]);
+        }
+    }
+    fixed_vector& operator=(const fixed_vector& other){
+        fixed_vector new_other(other);
+        std::swap(new_other.data, data);
+        std::swap(new_other.pos, pos);
+        return *this;
+    }
+
+    ~fixed_vector(){
+        for(size_t i = 0; i < pos; i++) {
+            reinterpret_cast<T*> (&data[i])->~T();
+        }
+    }
+
 
     bool empty() const {//+
         return !pos;
@@ -86,7 +104,7 @@ public:
         return si;
     }
 
-    void push_back(const T &value) {//+
+    void push_back(const T &value) {//
         assert(pos < si);
         new(&data[pos])T(value);
         pos++;
@@ -145,6 +163,7 @@ public:
         }
         return iterator(in_pos);
     }
+
 
 private:
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[si];
